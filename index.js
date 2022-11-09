@@ -18,6 +18,7 @@ async function run(){
     try{
         const serviceCollection = client.db('personal-trainer').collection('services');
         const reviewCollection = client.db('personal-trainer').collection('reviews');
+        
         app.get('/services', async(req, res) =>{
             const query = {};
             const cursor = serviceCollection.find(query);
@@ -48,7 +49,7 @@ async function run(){
                     email : req.query.email
                 }
             }
-            
+
             const cursor = reviewCollection.find(query);
             const reviews = await cursor.toArray();
             res.send(reviews);
@@ -59,6 +60,22 @@ async function run(){
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         });
+
+        app.patch('/reviews/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const updatedDoc = {
+                $set: {
+                }
+            }
+        })
+
+        app.delete('/reviews/:id', async(req, res)=>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result);
+        })
 
     }
     finally{
